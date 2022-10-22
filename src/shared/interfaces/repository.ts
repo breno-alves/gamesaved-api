@@ -1,26 +1,33 @@
 import { FilterQuery, QueryOptions } from 'mongoose';
-import { SchemaId } from '../types/schema-id.type';
+
+export type Projection<T> = Partial<Record<string, boolean | number>>;
 
 export interface RepositoryContract<T = any> {
-  findOne(query: Pick<T, keyof T>): Promise<T>;
+  create(data: Partial<T>): Promise<T>;
+
+  findOne(where: Partial<Pick<T, keyof T>>, options?: QueryOptions): Promise<T>;
+
+  findOne(
+    where: Partial<Pick<T, keyof T>>,
+    options?: QueryOptions,
+    projection?: Projection<T>,
+  ): Promise<Record<keyof Projection<T>, any>>;
 
   find(
-    query: FilterQuery<T>,
+    where: FilterQuery<T>,
     options?: QueryOptions,
-    projection?: Record<keyof T, boolean>,
+    projection?: Projection<T>,
   ): Promise<Array<T>>;
 
   findPaginated(
-    query: FilterQuery<T>,
+    where: FilterQuery<T>,
     options?: QueryOptions,
-    projection?: Record<keyof T, boolean>,
+    projection?: Projection<T>,
   ): Promise<Array<T>>;
 
-  first(query: FilterQuery<T>): Promise<T>;
+  first(where: FilterQuery<T>): Promise<T>;
 
-  update(id: SchemaId, data: Partial<T>): Promise<T>;
+  update(where: Partial<T>, data: Partial<T>): Promise<T>;
 
-  create<DTOType = Partial<T>>(data: DTOType): Promise<T>;
-
-  delete(id: SchemaId): Promise<void>;
+  delete(where: Partial<T>): Promise<T>;
 }

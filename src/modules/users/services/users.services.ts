@@ -3,13 +3,12 @@ import { UsersRepository } from '../repositories/users.repository';
 import { User, UserDocument } from '../schemas/user.schema';
 import * as bcrypt from 'bcryptjs';
 import { FilterQuery } from 'mongoose';
-import { CreateUserDto } from '../repositories/dtos/create-user.dto';
 
 @Injectable()
 export class UsersServices {
   constructor(private readonly usersRepository: UsersRepository) {}
 
-  async create(dto: CreateUserDto) {
+  async create(dto: Partial<UserDocument>) {
     const hashedPassword = await this.hashPassword(dto.password);
 
     return this.usersRepository.create({ ...dto, password: hashedPassword });
