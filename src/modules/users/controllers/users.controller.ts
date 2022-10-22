@@ -7,7 +7,7 @@ import {
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { Public } from 'src/modules/auth/auth.service';
+import { Public } from '@/modules/auth/auth.service';
 import { CreateUserDto } from '../dtos/create-user-dto';
 import { UsersServices } from '../services/users.services';
 
