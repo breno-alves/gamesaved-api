@@ -2,16 +2,16 @@ import { FilterQuery, QueryOptions } from 'mongoose';
 import { SchemaId } from '../types/schema-id.type';
 
 export interface RepositoryContract<T = any> {
-  findById(id: SchemaId): Promise<T>;
+  findOne(query: Pick<T, keyof T>): Promise<T>;
 
   find(
-    query?: FilterQuery<T>,
+    query: FilterQuery<T>,
     options?: QueryOptions,
     projection?: Record<keyof T, boolean>,
   ): Promise<Array<T>>;
 
   findPaginated(
-    query?: FilterQuery<T>,
+    query: FilterQuery<T>,
     options?: QueryOptions,
     projection?: Record<keyof T, boolean>,
   ): Promise<Array<T>>;

@@ -36,8 +36,10 @@ export abstract class GenericRepository<ModelDocument>
     return data;
   }
 
-  async findById(id: Types.ObjectId): Promise<ModelDocument> {
-    return this.model.findById(id).exec();
+  async findOne(
+    query: Pick<ModelDocument, keyof ModelDocument>,
+  ): Promise<ModelDocument> {
+    return this.model.findOne(query).exec();
   }
 
   async create<DTOType = Partial<ModelDocument>>(
