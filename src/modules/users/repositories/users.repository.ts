@@ -1,16 +1,15 @@
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { FilterQuery, Model, ProjectionType, QueryOptions } from 'mongoose';
 import { User, UserDocument } from '../schemas/user.schema';
 import { CreateUserDto } from './dtos/create-user.dto';
 
+@Injectable()
 export class UsersRepository {
-  constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>,
-  ) {}
+  constructor(@InjectModel(User.name) private readonly model: Model<User>) {}
 
   async create(dto: CreateUserDto): Promise<UserDocument> {
-    const userExists = await this.userModel
+    const userExists = await this.model
       .findOne({
         $or: [{ username: dto.username }, { email: dto.email }],
       })
@@ -23,7 +22,7 @@ export class UsersRepository {
       );
     }
 
-    const user = new this.userModel(dto);
+    const user = new this.model(dto);
 
     return user.save();
   }
@@ -33,7 +32,7 @@ export class UsersRepository {
     projection = <ProjectionType<UserDocument>>{},
     options = <QueryOptions<UserDocument>>{ lean: true, skip: 0, limit: 1 },
   ): Promise<UserDocument> {
-    return this.userModel.findOne(where, projection, options).exec();
+    return this.model.findOne(where, projection, options).exec();
   }
 
   async find(
@@ -41,15 +40,15 @@ export class UsersRepository {
     projection = <ProjectionType<UserDocument>>{},
     options = <QueryOptions<UserDocument>>{ lean: true, skip: 0, limit: 25 },
   ): Promise<UserDocument[]> {
-    return this.userModel.find(where, projection, options).exec();
+    return this.model.find(where, projection, options).exec();
   }
 
   async update(where: FilterQuery<UserDocument>, dto: Partial<CreateUserDto>) {
-    return this.userModel.updateOne(where, dto).exec();
+    return this.model.updateOne(where, dto).exec();
   }
 
   async delete(where: FilterQuery<UserDocument>) {
-    const deletedUser = await this.userModel.deleteOne(where).exec();
+    const deletedUser = await this.model.deleteOne(where).exec();
 
     if (!deletedUser) {
       throw new HttpException(

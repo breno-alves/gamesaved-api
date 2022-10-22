@@ -3,10 +3,11 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import configuration from './modules/config/config';
+import configuration from './config/config';
 import { AuthService } from './modules/auth/auth.service';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
+import { GamesModule } from './modules/games/games.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
     }),
     UsersModule,
     AuthModule,
+    GamesModule,
   ],
   providers: [
     AuthService,
