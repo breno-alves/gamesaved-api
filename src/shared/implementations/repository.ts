@@ -1,5 +1,5 @@
 import { Projection, RepositoryContract } from '../interfaces/repository';
-import { FilterQuery, Model, QueryOptions } from 'mongoose';
+import { FilterQuery, Model, QueryOptions, UpdateQuery } from 'mongoose';
 
 export abstract class GenericRepository<ModelDocument>
   implements RepositoryContract<ModelDocument>
@@ -57,7 +57,7 @@ export abstract class GenericRepository<ModelDocument>
 
   async update(
     query: FilterQuery<Pick<ModelDocument, keyof ModelDocument>>,
-    data: Partial<ModelDocument>,
+    data: UpdateQuery<ModelDocument>,
   ): Promise<ModelDocument> {
     return this.model.findOneAndUpdate(query, data, { new: true }).exec();
   }

@@ -1,5 +1,7 @@
+import { Game, GameDocument } from '@/modules/games/schemas/game.schema';
+import { SchemaId } from '@/shared/types/schema-id.type';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { HydratedDocument, SchemaTypes } from 'mongoose';
 
 export type Gender = 'male' | 'female' | 'other';
 
@@ -43,6 +45,9 @@ export class User {
 
   @Prop({ default: '' })
   steamProfile: string;
+
+  @Prop({ type: SchemaTypes.Array, default: [] })
+  games: SchemaId[] | GameDocument[];
 }
 
 export type UserDocument = HydratedDocument<User>;

@@ -6,6 +6,10 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
+    "typeRoots": [
+      "src/@types",
+      "node_modules/@types"
+    ],
     "target": "es2017",
     "sourceMap": true,
     "outDir": "./dist",

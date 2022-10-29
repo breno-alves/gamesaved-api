@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { UsersRepository } from '../repositories/users.repository';
 import { User, UserDocument } from '../schemas/user.schema';
 import * as bcrypt from 'bcryptjs';
-import { FilterQuery } from 'mongoose';
+import { FilterQuery, UpdateQuery } from 'mongoose';
 
 @Injectable()
 export class UsersServices {
@@ -26,7 +26,7 @@ export class UsersServices {
 
   update(
     where: FilterQuery<Pick<UserDocument, 'username' | 'email' | '_id'>>,
-    dto: Partial<User>,
+    dto: UpdateQuery<User>,
   ) {
     return this.usersRepository.update(where, dto);
   }
