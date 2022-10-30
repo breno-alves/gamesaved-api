@@ -6,7 +6,7 @@ on:
       - master
 
 jobs:
-  docker:
+  build-and-push:
     runs-on: ubuntu-latest
     steps:
       -
@@ -20,9 +20,6 @@ jobs:
         uses: docker/setup-buildx-action@v2
       -
         name: Login to Docker Hub
-        run: echo ${{ secrets.DOCKERHUB_USERNAME }} | sed -e 's/\(.\)/\1 /g'
-      -
-        name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
@@ -30,7 +27,6 @@ jobs:
       - name: Get short hash
         id: vars
         run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-
       -
         name: Build and push
         uses: docker/build-push-action@v3
@@ -38,3 +34,24 @@ jobs:
           context: .
           push: true
           tags: brenoalvesdev/gamesaved:${{ steps.vars.outputs.sha_short }}
+
+  deploy:
+    needs: build-and-push
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v2 
+      - name: Deploy in EC2
+        env:
+            PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
+            HOSTNAME : ${{ secrets.HOSTNAME  }}
+            USER_NAME : ${{ secrets.USER_NAME  }}
+            
+        run: |
+          echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            docker rm -f gamesaved;
+            docker system prune --force;
+            docker pull brenoalvesdev/gamesaved:${{ steps.vars.outputs.sha_short }};
+            docker run -d --name gamesaved -p 3000:3000 brenoalvesdev/gamesaved:${{ steps.vars.outputs.sha_short }}; 
+          '
