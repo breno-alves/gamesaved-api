@@ -1,0 +1,13 @@
+.git
+.gitignore
+node_modules
+npm-debug.log
+Dockerfile
+.git
+.gitignore
+.npmrc
+.circleci
+.env*
+.editorconfig
+.eslint*
+.prettierrc
