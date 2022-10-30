@@ -23,6 +23,12 @@ export class Game {
 
   @Prop({ required: true })
   background_image: string;
+
+  @Prop({ required: false, default: [] })
+  platforms?: string[];
+
+  @Prop({ required: false, default: [] })
+  screenshots?: string[];
 }
 
 export type GameDocument = HydratedDocument<Game>;

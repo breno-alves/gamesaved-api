@@ -1,3 +1,4 @@
+import { Public } from '@/modules/auth/auth.service';
 import { PaginatorDto } from '@/shared/pipes/paginator/dtos/paginator.dto';
 import PaginatorPipe from '@/shared/pipes/paginator/paginator.pipe';
 import {

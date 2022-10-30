@@ -10,7 +10,9 @@ export default class PaginatorPipe implements PipeTransform {
       };
       return paginator;
     } catch (e) {
-      return {};
+      // TODO: improve error handling
+      console.log('error in paginator pipe', e);
+      return { page: 0, limit: 25 };
     }
   }
 }

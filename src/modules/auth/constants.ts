@@ -1,3 +1,4 @@
+// TODO: add secret to configModule
 export const jwtConstants = {
-  secret: 'secretKey',
+  secret: 'ZYjBOshRHw',
 };

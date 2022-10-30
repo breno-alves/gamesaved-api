@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import {
+  IsArray,
+  IsNotEmpty,
+  IsNumber,
+  IsOptional,
+  IsString,
+} from 'class-validator';
 
 export class CreateGameDto {
   @IsString()
@@ -26,4 +32,12 @@ export class CreateGameDto {
   @IsString()
   @IsNotEmpty()
   background_image: string;
+
+  @IsOptional()
+  @IsArray()
+  platforms?: string[];
+
+  @IsOptional()
+  @IsArray()
+  screenshots?: string[];
 }
