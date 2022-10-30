@@ -1,4 +1,5 @@
 import { Game, GameDocument } from '@/modules/games/schemas/game.schema';
+import { GuildDocument } from '@/modules/guilds/schemas/guild.schema';
 import { SchemaId } from '@/shared/types/schema-id.type';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument, SchemaTypes } from 'mongoose';
@@ -48,6 +49,9 @@ export class User {
 
   @Prop({ type: SchemaTypes.Array, default: [] })
   games: SchemaId[] | GameDocument[];
+
+  @Prop({ type: SchemaTypes.Array, default: [] })
+  guilds: SchemaId[] | GuildDocument[];
 }
 
 export type UserDocument = HydratedDocument<User>;

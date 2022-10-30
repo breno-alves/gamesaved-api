@@ -5,9 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import configuration from './config/config';
 import { AuthService } from './modules/auth/auth.service';
-import { APP_GUARD } from '@nestjs/core';
-import { JwtAuthGuard } from './modules/auth/jwt-auth.guard';
 import { GamesModule } from './modules/games/games.module';
+import { GuildsModule } from './modules/guilds/guilds.module';
 
 @Module({
   imports: [
@@ -22,13 +21,8 @@ import { GamesModule } from './modules/games/games.module';
     UsersModule,
     AuthModule,
     GamesModule,
+    GuildsModule,
   ],
-  providers: [
-    AuthService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard,
-    },
-  ],
+  providers: [AuthService],
 })
 export class AppModule {}

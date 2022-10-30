@@ -18,7 +18,11 @@ export abstract class GenericService<T = any> implements ServiceContract<T> {
     where: Partial<T>,
     options = <PaginatorDto>{ limit: 25, page: 0 },
   ): Promise<Array<T>> {
-    return this.repo.findPaginated(where, options);
+    const queryOptions = {
+      limit: options.limit,
+      skip: options.limit * options.page,
+    };
+    return this.repo.findPaginated(where, queryOptions);
   }
 
   async update(where: Partial<T>, data: Partial<T>): Promise<T> {

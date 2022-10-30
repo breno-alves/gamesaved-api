@@ -1,6 +1,8 @@
 import { GamesRepository } from '@/modules/games/repository/games.repository';
 import { GameDocument } from '@/modules/games/schemas/game.schema';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class GamesFactory {
   constructor(private readonly repo: GamesRepository) {}
 

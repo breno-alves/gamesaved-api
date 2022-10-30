@@ -1,6 +1,12 @@
 import { UserDocument } from '@/modules/users/schemas/user.schema';
 import { SchemaId } from '@/shared/types/schema-id.type';
-import { Inject, Injectable, PipeTransform, Scope } from '@nestjs/common';
+import {
+  HttpException,
+  Inject,
+  Injectable,
+  PipeTransform,
+  Scope,
+} from '@nestjs/common';
 import { REQUEST } from '@nestjs/core';
 
 export type UserPipeOutput = {
@@ -19,6 +25,11 @@ export default class UserPipe implements PipeTransform {
   ) {}
 
   public transform() {
-    return this.request.user;
+    const user = this.request.user;
+
+    if (!user) {
+      throw new HttpException({ message: 'user not authenticated' }, 401);
+    }
+    return user;
   }
 }
