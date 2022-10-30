@@ -1,8 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { UsersRepository } from '../repositories/users.repository';
 import { User, UserDocument } from '../schemas/user.schema';
 import * as bcrypt from 'bcryptjs';
 import { FilterQuery, UpdateQuery } from 'mongoose';
+import { SchemaId } from '@/shared/types/schema-id.type';
 
 @Injectable()
 export class UsersServices {
@@ -41,5 +42,49 @@ export class UsersServices {
 
   verifyPassword(password: string, hash: string): Promise<boolean> {
     return bcrypt.compare(password, hash);
+  }
+
+  async followUser(target: string | SchemaId, user: string | SchemaId) {
+    const alreadyFollows = await this.findOne({
+      $or: [
+        { _id: target, followers: { $in: user } },
+        {
+          _id: user,
+          following: { $in: target },
+        },
+      ],
+    });
+
+    if (alreadyFollows) {
+      throw new HttpException(
+        { message: 'user already followed' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.update({ _id: target }, { $push: { followers: user } });
+    return this.update({ _id: user }, { $push: { following: target } });
+  }
+
+  async unfollowUser(target: string | SchemaId, user: string | SchemaId) {
+    const alreadyFollows = await this.findOne({
+      $or: [
+        { _id: target, followers: { $in: user } },
+        {
+          _id: user,
+          following: { $in: target },
+        },
+      ],
+    });
+
+    if (!alreadyFollows) {
+      throw new HttpException(
+        { message: 'user not followed' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    await this.update({ _id: target }, { $pull: { followers: user } });
+    return this.update({ _id: user }, { $pull: { following: target } });
   }
 }
